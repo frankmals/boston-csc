@@ -10,13 +10,17 @@ interface Event {
 }
 
 async function getUpcomingEvents() {
-  return sanityFetch<Event[]>({ query: upcomingEventsQuery })
+  const events = await sanityFetch<Event[]>({ query: upcomingEventsQuery })
+  console.log('Fetched events:', events)
+  return events
 }
 
 export async function UpcomingEvents() {
   const events = await getUpcomingEvents()
+  console.log('Rendering events:', events)
 
   if (!events?.length) {
+    console.log('No events found')
     return (
       <div className="text-center text-gray-500 py-8">
         No upcoming events scheduled

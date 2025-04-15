@@ -9,6 +9,10 @@ interface Event {
   venue?: string
 }
 
+interface SanityError {
+  message: string
+}
+
 async function getUpcomingEvents() {
   console.log('Executing query:', upcomingEventsQuery)
   try {
@@ -78,10 +82,11 @@ export async function UpcomingEvents() {
         )}
       </div>
     )
-  } catch (error: any) {
+  } catch (error) {
+    const sanityError = error as SanityError
     return (
       <div className="text-center text-red-500 py-8">
-        Error loading events: {error.message || 'Unknown error'}
+        Error loading events: {sanityError.message || 'Unknown error'}
       </div>
     )
   }

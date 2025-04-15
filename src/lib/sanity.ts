@@ -7,6 +7,7 @@ export const client = createClient({
   useCdn: false, // Disable CDN caching
   perspective: 'published',
   stega: false,
+  token: process.env.SANITY_API_TOKEN, // Add token for authenticated requests
 })
 
 interface SanityImage {

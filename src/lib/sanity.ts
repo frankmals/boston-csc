@@ -3,8 +3,10 @@ import { createClient, type QueryParams } from 'next-sanity'
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2024-03-19', // use current date
-  useCdn: process.env.NODE_ENV === 'production',
+  apiVersion: '2024-03-19',
+  useCdn: false, // Disable CDN caching
+  perspective: 'published',
+  stega: false,
 })
 
 interface SanityImage {
@@ -19,7 +21,7 @@ export const urlFor = (source: SanityImage | undefined) => {
   return `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/${source.asset._ref}`
 }
 
-// Type-safe fetch function
+// Type-safe fetch function with cache busting
 export async function sanityFetch<QueryResponse>({
   query,
   params = {},
@@ -27,5 +29,12 @@ export async function sanityFetch<QueryResponse>({
   query: string
   params?: QueryParams
 }): Promise<QueryResponse> {
-  return client.fetch<QueryResponse>(query, params)
+  return client.fetch<QueryResponse>(
+    query,
+    params,
+    {
+      cache: 'no-store', // Disable caching at the fetch level
+      next: { revalidate: 0 } // Force revalidation on every request
+    }
+  )
 } 

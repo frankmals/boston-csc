@@ -14,10 +14,8 @@ interface SanityError {
 }
 
 async function getUpcomingEvents() {
-  console.log('Executing query:', upcomingEventsQuery)
   try {
     const events = await sanityFetch<Event[]>({ query: upcomingEventsQuery })
-    console.log('Raw events data:', JSON.stringify(events, null, 2))
     return events
   } catch (error) {
     console.error('Error fetching events:', error)
@@ -28,18 +26,9 @@ async function getUpcomingEvents() {
 export async function UpcomingEvents() {
   try {
     const events = await getUpcomingEvents()
-    console.log('Events in component:', events?.length, 'events found')
 
-    // Debug view - always show this during development
     return (
       <div>
-        <div className="bg-yellow-100 p-4 mb-4 rounded">
-          <h3 className="font-bold">Debug Info:</h3>
-          <pre className="whitespace-pre-wrap text-sm">
-            {JSON.stringify(events, null, 2)}
-          </pre>
-        </div>
-
         {!events?.length ? (
           <div className="text-center text-gray-500 py-8">
             No upcoming events scheduled

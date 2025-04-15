@@ -2,18 +2,19 @@ import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'event',
-  title: 'Events',
+  title: 'Matches & Events',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Match Title',
       type: 'string',
+      description: 'e.g. "Celtic vs. Rangers"',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'date',
-      title: 'Date',
+      title: 'Date & Time',
       type: 'datetime',
       validation: (Rule) => Rule.required(),
     }),
@@ -21,7 +22,8 @@ export default defineType({
       name: 'isWatchParty',
       title: 'Is Watch Party',
       type: 'boolean',
-      initialValue: false,
+      initialValue: true,
+      description: 'If checked, will show as "Watch Party" instead of time',
     }),
     defineField({
       name: 'description',
@@ -39,11 +41,20 @@ export default defineType({
     select: {
       title: 'title',
       date: 'date',
+      isWatchParty: 'isWatchParty',
     },
-    prepare({ title, date }) {
+    prepare({ title, date, isWatchParty }) {
+      const datetime = new Date(date)
+      const formattedDate = datetime.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      })
       return {
-        title,
-        subtitle: date ? new Date(date).toLocaleDateString() : '',
+        title: title,
+        subtitle: `${formattedDate} - ${isWatchParty ? 'Watch Party' : datetime.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+        })}`,
       }
     },
   },

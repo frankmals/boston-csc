@@ -1,11 +1,13 @@
 import { type SchemaTypeDefinition } from 'sanity'
 
-import event from './eventType'
-import venue from './venueType'
-import product from './productType'
+import eventType from './eventType'
+import productType from './productType'
+import venueType from './venueType'
+import siteSettings from './siteSettings'
 
 export const schemaTypes: SchemaTypeDefinition[] = [
-  event,
-  venue,
-  product,
+  eventType,
+  productType,
+  venueType,
+  siteSettings,
 ]

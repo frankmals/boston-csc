@@ -20,42 +20,38 @@ export async function FeaturedSwag() {
 
   if (!products?.length) {
     return (
-      <div className="text-center text-gray-500 py-8">
+      <div className="text-center text-white py-8">
         No featured products available
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
       {products.map((product) => (
         <Link
           key={product._id}
           href={`/shop/${product.slug}`}
-          className="group"
+          className="block bg-white rounded-lg p-4 text-center hover:shadow-lg transition-shadow"
         >
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="aspect-square relative bg-gray-100">
-              {product.imageUrl ? (
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-200"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  No image available
-                </div>
-              )}
-            </div>
-            <div className="p-4">
-              <h3 className="font-medium text-lg mb-2">{product.name}</h3>
-              <p className="text-green-600 font-bold">
-                ${product.price.toFixed(2)}
-              </p>
-            </div>
+          <div className="aspect-square relative bg-gray-50 mb-4 rounded overflow-hidden">
+            {product.imageUrl ? (
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                fill
+                className="object-contain p-4"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                No image available
+              </div>
+            )}
           </div>
+          <h3 className="text-xl font-medium mb-2">T-Shirt</h3>
+          <p className="text-xl font-bold text-[#006B25]">
+            ${product.price.toFixed(2)}
+          </p>
         </Link>
       ))}
     </div>

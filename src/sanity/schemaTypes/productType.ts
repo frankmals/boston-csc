@@ -7,13 +7,14 @@ export default defineType({
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Product Name',
       type: 'string',
+      initialValue: 'T-Shirt',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'URL Slug',
       type: 'slug',
       options: {
         source: 'name',
@@ -23,7 +24,7 @@ export default defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Image',
+      title: 'Product Image',
       type: 'image',
       options: {
         hotspot: true,
@@ -34,6 +35,7 @@ export default defineType({
       name: 'price',
       title: 'Price',
       type: 'number',
+      initialValue: 20.00,
       validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
@@ -43,9 +45,9 @@ export default defineType({
     }),
     defineField({
       name: 'featured',
-      title: 'Featured on Homepage',
+      title: 'Show on Homepage',
       type: 'boolean',
-      initialValue: false,
+      initialValue: true,
     }),
     defineField({
       name: 'sizes',
@@ -61,12 +63,21 @@ export default defineType({
           { title: '2X-Large', value: '2XL' },
         ],
       },
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {
     select: {
       title: 'name',
       media: 'image',
+      price: 'price',
+    },
+    prepare({ title, media, price }) {
+      return {
+        title,
+        subtitle: `$${price.toFixed(2)}`,
+        media,
+      }
     },
   },
 }) 

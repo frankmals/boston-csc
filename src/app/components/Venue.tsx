@@ -1,36 +1,51 @@
-import { client } from '@/lib/sanity'
-import { venueQuery } from '@/lib/queries'
 import Image from 'next/image'
+import { sanityFetch } from '@/lib/sanityFetch'
 
 interface Venue {
   name: string
   address: string
   city: string
-  imageUrl?: string
+  image?: {
+    asset: {
+      url: string
+    }
+  }
   googleMapsUrl?: string
 }
 
 async function getVenue() {
-  return await client.fetch<Venue>(venueQuery)
+  const query = `*[_type == "venue"][0]{
+    name,
+    address,
+    city,
+    image {
+      asset->{
+        url
+      }
+    },
+    googleMapsUrl
+  }`
+  return await sanityFetch<Venue>({ query })
 }
 
 export async function Venue() {
   const venue = await getVenue()
-
   if (!venue) return null
-
-  console.log('Venue data:', JSON.stringify(venue, null, 2))
 
   return (
     <div className="flex flex-col md:flex-row items-center gap-8 max-w-4xl mx-auto">
       <div className="w-full md:w-1/2">
-        <Image
-          src="/venue.jpg"
-          alt="The Banshee Pub"
-          width={800}
-          height={600}
-          className="rounded-lg shadow-lg object-cover w-full h-full"
-        />
+        {venue.image?.asset.url ? (
+          <Image
+            src={venue.image.asset.url}
+            alt={venue.name}
+            width={800}
+            height={600}
+            className="rounded-lg shadow-lg object-cover w-full h-full"
+          />
+        ) : (
+          <div>No image available</div>
+        )}
       </div>
       <div className="w-full md:w-1/2 text-center">
         <h2 className="text-3xl font-bold mb-4">

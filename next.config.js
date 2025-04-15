@@ -5,11 +5,9 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
-        pathname: '/images/**',
       },
     ],
-    domains: ['cdn.sanity.io'],
   },
-}
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig; 

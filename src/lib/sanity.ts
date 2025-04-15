@@ -1,4 +1,4 @@
-import { createClient } from 'next-sanity'
+import { createClient, type QueryParams } from 'next-sanity'
 
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -17,4 +17,15 @@ interface SanityImage {
 export const urlFor = (source: SanityImage | undefined) => {
   if (!source?.asset?._ref) return undefined
   return `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/${source.asset._ref}`
+}
+
+// Type-safe fetch function
+export async function sanityFetch<QueryResponse>({
+  query,
+  params = {},
+}: {
+  query: string
+  params?: QueryParams
+}): Promise<QueryResponse> {
+  return client.fetch<QueryResponse>(query, params)
 } 

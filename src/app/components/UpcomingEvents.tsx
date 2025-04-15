@@ -1,4 +1,4 @@
-import { client } from '@/lib/sanity'
+import { sanityFetch } from '@/lib/sanity'
 import { upcomingEventsQuery } from '@/lib/queries'
 
 interface Event {
@@ -10,7 +10,7 @@ interface Event {
 }
 
 async function getUpcomingEvents() {
-  return await client.fetch<Event[]>(upcomingEventsQuery)
+  return sanityFetch<Event[]>({ query: upcomingEventsQuery })
 }
 
 export async function UpcomingEvents() {

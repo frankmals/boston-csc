@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { client } from '@/lib/sanity'
+import { sanityFetch } from '@/lib/sanity'
 import { featuredProductsQuery } from '@/lib/queries'
 
 interface Product {
@@ -12,7 +12,7 @@ interface Product {
 }
 
 async function getFeaturedProducts() {
-  return await client.fetch<Product[]>(featuredProductsQuery)
+  return sanityFetch<Product[]>({ query: featuredProductsQuery })
 }
 
 export async function FeaturedSwag() {

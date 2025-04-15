@@ -1,11 +1,10 @@
-import Image from 'next/image'
 import { sanityFetch } from '@/lib/sanity'
 import { siteSettingsQuery } from '@/lib/queries'
 
 interface SiteSettings {
   title: string
   subtitle?: string
-  logoUrl: string
+  logoUrl?: string
 }
 
 async function getSiteSettings() {
@@ -17,17 +16,17 @@ export async function Header() {
 
   if (!settings) return null
 
+  console.log('Site Settings:', JSON.stringify(settings, null, 2))
+
   return (
     <header className="bg-[#006B25] text-white py-4">
       <div className="container mx-auto px-4 flex items-center">
         {settings.logoUrl && (
-          <div className="relative w-20 h-20 mr-4">
-            <Image
+          <div className="w-20 h-20 mr-4">
+            <img
               src={settings.logoUrl}
               alt="Celtic Logo"
-              fill
-              className="object-contain"
-              sizes="80px"
+              className="w-full h-full object-contain"
             />
           </div>
         )}

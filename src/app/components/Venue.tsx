@@ -1,9 +1,16 @@
-import Image from 'next/image'
 import { client } from '@/lib/sanity'
 import { venueQuery } from '@/lib/queries'
 
+interface Venue {
+  name: string
+  address: string
+  city: string
+  imageUrl?: string
+  googleMapsUrl?: string
+}
+
 async function getVenue() {
-  return await client.fetch(venueQuery)
+  return await client.fetch<Venue>(venueQuery)
 }
 
 export async function Venue() {
@@ -11,16 +18,17 @@ export async function Venue() {
 
   if (!venue) return null
 
+  console.log('Venue data:', JSON.stringify(venue, null, 2))
+
   return (
     <div className="flex flex-col md:flex-row items-center gap-8 max-w-4xl mx-auto">
       <div className="w-full md:w-1/2">
         <div className="aspect-[4/3] relative bg-gray-200 rounded-lg overflow-hidden">
           {venue.imageUrl ? (
-            <Image
+            <img
               src={venue.imageUrl}
               alt={venue.name}
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">

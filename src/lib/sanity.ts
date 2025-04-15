@@ -7,7 +7,14 @@ export const client = createClient({
   useCdn: process.env.NODE_ENV === 'production',
 })
 
+interface SanityImage {
+  asset: {
+    _ref: string
+  }
+}
+
 // Helper function to handle image URLs
-export const urlFor = (source: any) => {
-  return `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/${source}`
+export const urlFor = (source: SanityImage | undefined) => {
+  if (!source?.asset?._ref) return undefined
+  return `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/${source.asset._ref}`
 } 

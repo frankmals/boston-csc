@@ -3,8 +3,16 @@ import Link from 'next/link'
 import { client } from '@/lib/sanity'
 import { featuredProductsQuery } from '@/lib/queries'
 
+interface Product {
+  _id: string
+  name: string
+  slug: string
+  imageUrl?: string
+  price: number
+}
+
 async function getFeaturedProducts() {
-  return await client.fetch(featuredProductsQuery)
+  return await client.fetch<Product[]>(featuredProductsQuery)
 }
 
 export async function FeaturedSwag() {
@@ -20,7 +28,7 @@ export async function FeaturedSwag() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {products.map((product: any) => (
+      {products.map((product) => (
         <Link
           key={product._id}
           href={`/shop/${product.slug}`}

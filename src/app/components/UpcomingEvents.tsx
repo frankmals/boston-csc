@@ -1,8 +1,16 @@
 import { client } from '@/lib/sanity'
 import { upcomingEventsQuery } from '@/lib/queries'
 
+interface Event {
+  _id: string
+  title: string
+  date: string
+  isWatchParty: boolean
+  venue?: string
+}
+
 async function getUpcomingEvents() {
-  return await client.fetch(upcomingEventsQuery)
+  return await client.fetch<Event[]>(upcomingEventsQuery)
 }
 
 export async function UpcomingEvents() {
@@ -20,7 +28,7 @@ export async function UpcomingEvents() {
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
         <tbody>
-          {events.map((event: any) => {
+          {events.map((event) => {
             const eventDate = new Date(event.date)
             const formattedDate = eventDate.toLocaleDateString('en-US', {
               weekday: 'short',

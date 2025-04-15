@@ -1,58 +1,45 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { sanityFetch } from '@/lib/sanity'
-import { featuredProductsQuery } from '@/lib/queries'
+import { sanityFetch } from '@/lib/sanityFetch'
 
 interface Product {
   _id: string
   name: string
-  slug: string
-  imageUrl?: string
   price: number
-}
-
-async function getFeaturedProducts() {
-  return sanityFetch<Product[]>({ query: featuredProductsQuery })
+  image?: {
+    asset: {
+      url: string
+    }
+  }
 }
 
 export async function FeaturedSwag() {
-  const products = await getFeaturedProducts()
+  // Fetch up to 4 products
+  const query = `*[_type == "product"][0...4]{
+    _id,
+    name,
+    price,
+    image {
+      asset->{
+        url
+      }
+    }
+  }`
+  const products = await sanityFetch<Product[]>({ query })
 
-  if (!products?.length) {
-    return (
-      <div className="text-center text-white py-8">
-        No featured products available
-      </div>
-    )
+  if (!products.length) {
+    return <div>No swag available at the moment.</div>
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-      {products.map((product) => (
-        <Link
-          key={product._id}
-          href={`/shop/${product.slug}`}
-          className="block bg-white rounded-lg p-4 text-center hover:shadow-lg transition-shadow"
-        >
-          <div className="aspect-square relative bg-gray-50 mb-4 rounded overflow-hidden">
-            {product.imageUrl ? (
-              <Image
-                src={product.imageUrl}
-                alt={product.name}
-                fill
-                className="object-contain p-4"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                No image available
-              </div>
-            )}
-          </div>
-          <h3 className="text-xl font-medium mb-2">T-Shirt</h3>
-          <p className="text-xl font-bold text-[#006B25]">
-            ${product.price.toFixed(2)}
-          </p>
-        </Link>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {products.map(product => (
+        <div key={product._id} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+          {product.image?.asset.url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={product.image.asset.url} alt={product.name} className="w-32 h-32 object-contain mb-2" />
+          )}
+          <div className="font-bold">{product.name}</div>
+          <div className="text-green-700">${product.price.toFixed(2)}</div>
+        </div>
       ))}
     </div>
   )

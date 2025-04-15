@@ -9,7 +9,7 @@ const client = createClient({
 
 interface SanityFetchProps {
   query: string;
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
   tags?: string[];
 }
 

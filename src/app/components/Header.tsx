@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { sanityFetch } from '@/lib/sanityFetch'
 import './Header.css'
 
@@ -58,10 +59,12 @@ export default async function Header() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center mb-6">
             <div className="logo-container mb-4">
-              <img
+              <Image
                 src={settings.logo.asset.url}
                 alt="Boston Celtic Supporters Club Logo"
-                className="w-24 h-24 object-contain"
+                width={96}
+                height={96}
+                className="object-contain"
               />
             </div>
             <h1 className="text-4xl font-bold text-center mb-2">{settings.title}</h1>

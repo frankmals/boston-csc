@@ -1,87 +1,35 @@
-import { sanityFetch } from '@/lib/sanity'
-import { upcomingEventsQuery } from '@/lib/queries'
+import { sanityFetch } from '@/lib/sanityFetch'
 
 interface Event {
   _id: string
   title: string
   date: string
-  isWatchParty: boolean
-  venue?: string
-}
-
-interface SanityError {
-  message: string
-}
-
-async function getUpcomingEvents() {
-  try {
-    const events = await sanityFetch<Event[]>({ query: upcomingEventsQuery })
-    return events
-  } catch (error) {
-    console.error('Error fetching events:', error)
-    throw error
-  }
+  description?: string
 }
 
 export async function UpcomingEvents() {
-  try {
-    const events = await getUpcomingEvents()
+  // Fetch the next 3 upcoming events, sorted by date
+  const query = `*[_type == "event" && date >= now()] | order(date asc)[0...3]{
+    _id,
+    title,
+    date,
+    description
+  }`
+  const events = await sanityFetch<Event[]>({ query })
 
-    return (
-      <div className="max-w-3xl mx-auto">
-        {!events?.length ? (
-          <div className="text-center text-gray-500 py-8">
-            No upcoming events scheduled
-          </div>
-        ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-200">
-            <table className="w-full border-collapse bg-white text-left">
-              <tbody>
-                {events.map((event) => {
-                  const eventDate = new Date(event.date)
-                  const formattedDate = eventDate.toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                  const formattedTime = eventDate.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                  })
-
-                  return (
-                    <tr
-                      key={event._id}
-                      className="border-b border-gray-200 last:border-0"
-                    >
-                      <td className="py-4 px-6 font-medium" style={{ width: '30%' }}>
-                        {formattedDate}
-                      </td>
-                      <td className="py-4 px-6 font-medium" style={{ width: '40%' }}>
-                        {event.title}
-                      </td>
-                      <td className="py-4 px-6" style={{ width: '30%' }}>
-                        {event.isWatchParty ? (
-                          <span className="font-medium">Watch Party</span>
-                        ) : (
-                          formattedTime
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    )
-  } catch (error) {
-    const sanityError = error as SanityError
-    return (
-      <div className="text-center text-red-500 py-8">
-        Error loading events: {sanityError.message || 'Unknown error'}
-      </div>
-    )
+  if (!events.length) {
+    return <div>No upcoming events.</div>
   }
+
+  return (
+    <ul className="space-y-4">
+      {events.map(event => (
+        <li key={event._id} className="p-4 border rounded-lg shadow">
+          <div className="font-bold text-lg">{event.title}</div>
+          <div className="text-gray-600">{new Date(event.date).toLocaleString()}</div>
+          {event.description && <div className="mt-2">{event.description}</div>}
+        </li>
+      ))}
+    </ul>
+  )
 } 

@@ -1,5 +1,6 @@
 import { client } from '@/lib/sanity'
 import { venueQuery } from '@/lib/queries'
+import Image from 'next/image'
 
 interface Venue {
   name: string
@@ -23,19 +24,13 @@ export async function Venue() {
   return (
     <div className="flex flex-col md:flex-row items-center gap-8 max-w-4xl mx-auto">
       <div className="w-full md:w-1/2">
-        <div className="aspect-[4/3] relative bg-gray-200 rounded-lg overflow-hidden">
-          {venue.imageUrl ? (
-            <img
-              src={venue.imageUrl}
-              alt={venue.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              No image available
-            </div>
-          )}
-        </div>
+        <Image
+          src="/venue.jpg"
+          alt="The Banshee Pub"
+          width={800}
+          height={600}
+          className="rounded-lg shadow-lg object-cover w-full h-full"
+        />
       </div>
       <div className="w-full md:w-1/2 text-center">
         <h2 className="text-3xl font-bold mb-4">

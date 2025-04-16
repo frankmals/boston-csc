@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { sanityFetch } from '@/lib/sanityFetch'
+import { sanityFetch } from '@/lib/sanity'
 
 interface Venue {
   name: string

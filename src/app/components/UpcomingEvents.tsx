@@ -1,4 +1,4 @@
-import { sanityFetch } from '@/lib/sanityFetch'
+import { sanityFetch } from '@/lib/sanity'
 
 interface Event {
   _id: string
